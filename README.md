@@ -1,7 +1,7 @@
 # Social_Media_Privacy_Bot
 
 ## *HOW TO RUN WITH DOCKER*
- 1. Download and install the latest version of Docker
+ 1. Download and install the latest version of [Docker Desktop](https://hub.docker.com/editions/community/docker-ce-desktop-windows?tab=description)
  2.  Open terminal at the root of the project (where docker-compose.yml is)
  3.  `docker-compose build` to build the images  
  4.  `docker-compose up` to start the container (front/backend are now accessible)
