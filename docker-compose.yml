@@ -1,3 +1,5 @@
+version: "3"
+
 services:
   express-backend:
     build:
@@ -15,5 +17,5 @@ services:
     image: smb-frontend-img
     container_name: social-media-bot-frontend
     ports: 
-       - 3000:3000
+      - 3000:3000
       
