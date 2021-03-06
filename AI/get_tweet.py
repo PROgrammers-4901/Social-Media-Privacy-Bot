@@ -33,7 +33,6 @@ def getUser(username):
 def getHashtag(tag):
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
     tweets = []
-    truthy = True
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",
     }
@@ -43,4 +42,27 @@ def getHashtag(tag):
         'max_results': 100
     }
     
-    return requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
+    x = requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
+    x = json.loads(x.text)
+    tweets.append(x)
+    if 'next_token' in x['meta']:
+            next_token = x['meta']['next_token']
+            truthy = True
+    else:
+        truthy = False
+
+    while (truthy):
+        if (len(tweets) > 4):
+            truthy = False
+        params.update({'next_token': next_token})
+        x = requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
+        x = json.loads(x.text)
+        tweets.append(x)
+        if 'next_token' in x['meta']:
+            next_token = x['meta']['next_token']
+        else:
+            truthy = False
+    
+    return tweets
+
+print(json.dumps(getHashtag('stopDMCA'), indent=4))
