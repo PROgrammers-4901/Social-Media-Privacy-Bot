@@ -1,3 +1,4 @@
+import json
 from flask import Flask
 from get_tweet import getTweet, getUser, getHashtag
 
@@ -13,4 +14,4 @@ def tweet_by_user(username):
 
 @app.route('/hashtag/<tag>', methods=['GET'])
 def tweet_by_hashtag(tag):
-    return getUser(tag).text
+    return json.dumps(getHashtag(tag),indent=4)
