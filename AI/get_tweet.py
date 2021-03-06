@@ -40,27 +40,7 @@ def getHashtag(tag):
     
     params = {
         'query': f"#{tag}",
-        'max_results': 500
+        'max_results': 100
     }
     
-    x = requests.get(f'https://api.twitter.com/2/tweets/search/all', params=params, headers=headers)
-    print("what's gooing on")
-    x = json.loads(x.text)
-    tweets.append(x)
-    next_token = x['meta']['next_token']
-    print(next_token)
-
-    while (truthy):
-        params.update({'next_token': next_token})
-        x = requests.get(f'https://api.twitter.com/2/tweets/search/all', params=params, headers=headers)
-        x = json.loads(x.text)
-        tweets.append(x)
-        if 'next_token' in x['meta']:
-            next_token = x['meta']['next_token']
-            print(next_token)
-        else:
-            truthy = False
-    
-    return tweets
-
-getHashtag('pokemon')
+    return requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
