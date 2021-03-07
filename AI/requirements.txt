@@ -1,5 +1,6 @@
 ### Requirements ###
 flask
+flask-cors
 requests
 gspread
 oauth2client
