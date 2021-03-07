@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class GetByHashtag extends Component {
     constructor(props) {
@@ -26,13 +27,10 @@ export default class GetByHashtag extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        const hashtag = {
-            hashtag: this.state.hashtag
-        }
-
-        console.log(hashtag);
-
         // send request to Twitter API
+        axios.get('http://localhost:5001/hashtag/' + this.state.hashtag)
+            .then(res => console.log(res.data));
+        
 
         // redirect somewhere with results
     }
