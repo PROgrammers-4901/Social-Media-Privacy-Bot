@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+import axios from 'axios';
 
 export default class GetByProfile extends Component {
     constructor(props) {
@@ -26,15 +27,14 @@ export default class GetByProfile extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        const profileName = {
-            profileName: this.state.profileName
-        }
-
-        console.log(profileName);
-
         // send request to Twitter API
-
-        // redirect somewhere with results
+        axios.get('http://localhost:5001/username/' + this.state.profileName)
+            .then(res => {
+                console.log(res.data)
+                
+                // redirect somewhere with results
+            })
+            .catch(err => console.log("Cannot reach Twitter API: " + err));        
     }
 
     render() {

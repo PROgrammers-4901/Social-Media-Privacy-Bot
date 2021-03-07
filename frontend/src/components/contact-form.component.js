@@ -16,9 +16,9 @@ export default class ContactForm extends Component {
         }
     }
 
-    // this gets called on start
+    
     componentDidMount() {
-
+        // this gets called on start
     }
 
     onChangeName(e) {
