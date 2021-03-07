@@ -28,15 +28,13 @@ export default class GetByProfile extends Component {
         e.preventDefault();
 
         // send request to Twitter API
-        axios.get('localhost:5001/username/' + this.state.profileName)
+        axios.get('http://localhost:5001/username/' + this.state.profileName)
             .then(res => {
                 console.log(res.data)
                 
                 // redirect somewhere with results
             })
-            .catch(err => console.log("Cannot reach Twitter API: " + err));
-
-        
+            .catch(err => console.log("Cannot reach Twitter API: " + err));        
     }
 
     render() {
