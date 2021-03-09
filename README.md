@@ -8,5 +8,7 @@
  5.  `docker-compose down` to shut down the container
 
 The frontend is accessible at localhost:3000
+
 The backend is accessible at localhost:5000
+
 The TwitterAPI is accessible at localhost:5001
