@@ -27,18 +27,26 @@ export default class GetByTweet extends Component {
     onSubmit(e) {
         e.preventDefault();
 
-        const tweetURL = {
-            hashtag: this.state.tweetURL
-        }
+        // break apart URL
+        const tweet_id = this.state.tweetURL.match(/status\/(\d+)$/); // regex is one or more digits at the end of the URL followed by status/
 
-        // send request to Twitter API
-        axios.get('http://localhost:5001/tweet_id/' + this.state.profileName)
+        if( tweet_id != null)
+        {
+            axios.get('http://localhost:5001/tweet_id/' + tweet_id[1])
             .then(res => {
                 console.log(res.data)
                 
                 // redirect somewhere with results
             })
-            .catch(err => console.log("Cannot reach Twitter API: " + err));
+            .catch(err => this.setState({ tweetURL: 'Failed to Find Tweet' }));
+        }
+        else
+        {
+            this.setState({
+                tweetURL: 'Invalid URL'
+            })
+        }
+
     }
 
     render() {
@@ -47,7 +55,7 @@ export default class GetByTweet extends Component {
                 <br></br>
                 <form onSubmit={this.onSubmit}>
                     <input type ="text"
-                    placeholder="https://twitter.com/"
+                    placeholder="https://twitter.com/username/status/12345"
                     required
                     value={this.state.tweetURL}
                     onChange={this.onChangeTweetURL}

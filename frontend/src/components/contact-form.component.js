@@ -50,9 +50,9 @@ export default class ContactForm extends Component {
 
         console.log(payload);
 
-        // send request to Twitter API
+        // send request to Mail service?
 
-        // redirect somewhere with results
+        // refresh page or display something
     }
 
     render() {

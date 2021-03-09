@@ -5,6 +5,7 @@ import GetByHashtag from './components/get-by-hashtag.component';
 import GetByProfile from './components/get-by-profile.component';
 import GetByTweet from './components/get-by-tweet.component';
 import ContactForm from './components/contact-form.component';
+import InteractiveGame from './components/interactive-tweet.component';
 
 ReactDOM.render(
   <React.StrictMode>
@@ -29,10 +30,10 @@ ReactDOM.render(
 
 ReactDOM.render(
   <React.StrictMode>
-    <ContactForm />
+    <InteractiveGame /> 
   </React.StrictMode>,
   document.getElementById('contactForm')
-);
+);// put this back later on
 
 // If you want to start measuring performance in your app, pass a function
 // to log results (for example: reportWebVitals(console.log))
