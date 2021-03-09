@@ -5,8 +5,8 @@ export default class ContactForm extends Component {
     constructor(props) {
         super(props);
 
-        this.onTrue = this.onTrue.bind(this);
-        this.onFalse = this.onFalse.bind(this);
+        this.onSpam = this.onSpam.bind(this);
+        this.onHam = this.onHam.bind(this);
         this.onNext = this.onNext.bind(this);
 
         this.state = {
@@ -18,20 +18,28 @@ export default class ContactForm extends Component {
 
     
     componentDidMount() {
-        // this gets called on start
-        axios.get('http://localhost:5000/tweets/rand')
-            .then(res => {
-                this.setState({
-                    tweet : res.data.contents,
-                    label : res.data.label
-                });
-            })
-            .catch(err => console.log("Cannot reach Database API: " + err));
+        this.refreshTweet();
     }
 
     onNext(e) {
         e.preventDefault();
 
+        this.refreshTweet();
+    }
+
+    onSpam(e) {
+        e.preventDefault();
+
+        this.testFor(true);
+    }
+
+    onHam(e) {
+        e.preventDefault();
+
+        this.testFor(false);
+    }
+
+    refreshTweet() {
         axios.get('http://localhost:5000/tweets/rand')
             .then(res => {
                 this.setState({
@@ -42,29 +50,26 @@ export default class ContactForm extends Component {
             .catch(err => console.log("Cannot reach Database API: " + err));
     }
 
-    onTrue(e) {
-        e.preventDefault();
-        if(this.state.label == true)
-            this.setState({
+    testFor(bool) {
+        if(this.state.label == bool)
+        {
+                this.setState({
                 tweet: 'GOOD JOB!'
             });
-        else
-            this.setState({
-                tweet: 'WRONG!'
-            });
-    }
+            const timer = setTimeout(() => {this.refreshTweet()}, 2000);
 
-    onFalse(e) {
-        e.preventDefault();
-        if(this.state.label == false)
-            this.setState({
-                tweet: 'GOOD JOB!'
-            });
+            return () => clearTimeout(timer);
+        }
         else
-            this.setState({
+        {
+                this.setState({
                 tweet: 'WRONG!'
             });
 
+            const timer = setTimeout(() => {this.refreshTweet()}, 5000);
+
+            return () => clearTimeout(timer);
+        }
     }
 
     render() {
@@ -80,8 +85,8 @@ export default class ContactForm extends Component {
                     value={this.state.tweet}></textarea>
                 </div>
                 <div>
-                    <button onClick={this.onTrue}> SPAM </button>
-                    <button onClick={this.onFalse}> HAM </button>
+                    <button onClick={this.onSpam}> SPAM </button>
+                    <button onClick={this.onHam}> HAM </button>
                     <button onClick={this.onNext}> NEXT </button>
                 </div>
             </div>
