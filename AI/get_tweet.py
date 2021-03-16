@@ -65,4 +65,3 @@ def getHashtag(tag):
     
     return tweets
 
-print(json.dumps(getHashtag('stopDMCA'), indent=4))
