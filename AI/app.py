@@ -1,7 +1,10 @@
+import json
 from flask import Flask
+from flask_cors import CORS
 from get_tweet import getTweet, getUser, getHashtag
 
 app = Flask(__name__)
+CORS(app)
 
 @app.route('/tweet_id/<id>', methods=['GET'])
 def tweet_by_id(id):
@@ -13,4 +16,4 @@ def tweet_by_user(username):
 
 @app.route('/hashtag/<tag>', methods=['GET'])
 def tweet_by_hashtag(tag):
-    return getUser(tag).text
+    return json.dumps(getHashtag(tag),indent=4)
