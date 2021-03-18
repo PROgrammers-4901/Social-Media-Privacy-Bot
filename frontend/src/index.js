@@ -1,38 +1,30 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
+import "bootstrap/dist/css/bootstrap.min.css";
 
-import GetByHashtag from './components/get-by-hashtag.component';
-import GetByProfile from './components/get-by-profile.component';
-import GetByTweet from './components/get-by-tweet.component';
-import ContactForm from './components/contact-form.component';
+import TweetBotNav from './components/tweetBotNav.component';
 import InteractiveGame from './components/interactive-tweet.component';
+
 
 ReactDOM.render(
   <React.StrictMode>
-    <GetByHashtag />
+    <InteractiveGame />
   </React.StrictMode>,
-  document.getElementById('getByHashtag')
+  document.getElementById('interactiveTweet')
 );
-
+/*
 ReactDOM.render(
   <React.StrictMode>
     <GetByProfile />
   </React.StrictMode>,
   document.getElementById('getByProfile')
 );
-
+*/
 ReactDOM.render(
   <React.StrictMode>
-    <GetByTweet />
+    <TweetBotNav /> 
   </React.StrictMode>,
-  document.getElementById('getByTweet')
-);
-
-ReactDOM.render(
-  <React.StrictMode>
-    <InteractiveGame /> 
-  </React.StrictMode>,
-  document.getElementById('contactForm')
+  document.getElementById('navbar')
 );// put this back later on
 
 // If you want to start measuring performance in your app, pass a function
