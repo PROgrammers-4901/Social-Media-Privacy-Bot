@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-export default class ContactForm extends Component {
+export default class InteractiveTweet extends Component {
     constructor(props) {
         super(props);
 
@@ -76,7 +76,7 @@ export default class ContactForm extends Component {
         return (
             <div>
                 <div>
-                    <textarea 
+                    <textarea
                     placeholder="Example Tweet" 
                     rows="8" 
                     cols="100" 
