@@ -1,8 +1,7 @@
-import nltk
 import os
 import regex
 import gspread
-#nltk.download('stopwords')
+import random
 
 #Cleaning Data functions
 
@@ -39,7 +38,15 @@ def remove_emojis(tweet_list):
         tweet_list[temp][3] = emojis.sub(r'',tweet_list[temp][3])
     return tweet_list,tweet_emojis
 
-def main():
+# Remove upper case
+def remove_upper(tweet_list):
+
+    for temp in range(1,len(tweet_list)):
+        tweet_list[temp][3] = tweet_list[temp][3].lower()
+
+    return tweet_list
+
+def preprocess():
 
     #Currently only works on Alek's computer, will add dynamic credentials finding later
     to_path = os.path.join( os.getcwd(), '.vscode\social-media-privacy-bot-sheet-40065e2a0d5b.json')
@@ -48,9 +55,11 @@ def main():
     tweet_sheet = gc.open("tweet_data")
     
     ham_tweet_sheet = tweet_sheet.get_worksheet(0)
+    test_tweet_sheet = tweet_sheet.get_worksheet(1)
     spam_tweet_sheet = tweet_sheet.get_worksheet(2)
 
     ham_tweet_list = ham_tweet_sheet.get_all_values()
+    test_tweet_list = test_tweet_sheet.get_all_values()
     spam_tweet_list = spam_tweet_sheet.get_all_values()
     
     ham_tweet_list,ham_tweet_links = remove_urls(ham_tweet_list)
@@ -59,5 +68,18 @@ def main():
     spam_tweet_list,spam_tweet_links = remove_urls(spam_tweet_list)
     spam_tweet_list,spam_emojis = remove_emojis(spam_tweet_list)
 
-if __name__ == "__main__":
-    main()
+    test_tweet_list,test_tweet_links = remove_urls(test_tweet_list)
+    test_tweet_list,test_emojis = remove_emojis(test_tweet_list)
+
+    test_data = [[temp[3],link,emoji] for temp,link,emoji in zip(test_tweet_list[1:],test_tweet_links,test_emojis)]
+    test_labels = [temp[1] for temp in test_tweet_list[1:]]
+
+    train_data = [[temp[3],link,emoji] for temp,link,emoji in zip(spam_tweet_list[1:],spam_tweet_links,spam_emojis)]
+    train_labels = [temp[1] for temp in spam_tweet_list[1:]]
+
+    temp_tweet_list = [[temp[3],link,emoji] for temp,link,emoji in zip(ham_tweet_list[1:],ham_tweet_links,ham_emojis)]
+    spam_count = len(train_data)
+    train_data += random.choices([temp for temp in temp_tweet_list[1:]], k=spam_count)
+    train_labels += [temp[1] for temp in ham_tweet_list[1:spam_count+1]]
+
+    return train_data,train_labels,test_data,test_labels
