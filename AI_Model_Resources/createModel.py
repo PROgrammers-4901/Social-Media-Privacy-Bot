@@ -1,84 +1,97 @@
 from preprocess import *
 from IPython.display import display
 import pandas as pd
-import numpy as np
 import sklearn
-from sklearn import model_selection, preprocessing, linear_model, naive_bayes, metrics, svm
-from sklearn.utils import class_weight
-from sklearn.feature_extraction.text import TfidfVectorizer, CountVectorizer
-from keras.preprocessing.text import text_to_word_sequence
-import pickle
+from sklearn import preprocessing
+from sklearn import naive_bayes, svm
+from sklearn.model_selection import GridSearchCV,train_test_split
+from sklearn.metrics import accuracy_score,classification_report
+from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
 
-def stopwords(temp,stop_word):
-    x_new = text_to_word_sequence(temp)    # tokenize text 
-    clean = []
-    for i in x_new:
-        if i not in stop_word:
-            clean.append(i)
-    return " ".join(clean)
+def link_to_bool(temp):
+    if not temp:
+        return False
+    else:
+        return True
 
-def seperate_lists(temp_list):
+def best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,model_choice):
 
-    return [temp[0] for temp in temp_list],[temp[1] for temp in temp_list],[temp[2] for temp in temp_list]
+    scores = ['precision', 'recall']
+
+    for score in scores:
+        print("# Tuning hyper-parameters for %s" % score)
+        print()
+
+        clf = GridSearchCV(
+            model_choice, parameters, scoring='%s_macro' % score
+        )
+        clf.fit(train_tf, y_train)
+
+        print("Best parameters set found on development set:")
+        print()
+        print(clf.best_params_)
+        print()
+        print("Grid scores on development set:")
+        print()
+        means = clf.cv_results_['mean_test_score']
+        stds = clf.cv_results_['std_test_score']
+        for mean, std, params in zip(means, stds, clf.cv_results_['params']):
+            print("%0.3f (+/-%0.03f) for %r"
+                % (mean, std * 2, params))
+        print()
+
+        print("Detailed classification report:")
+        print()
+        print("The model is trained on the full development set.")
+        print("The scores are computed on the full evaluation set.")
+        print()
+        y_true, y_pred = y_test, clf.predict(test_tf)
+        print(classification_report(y_true, y_pred))
+        print()
 
 def main():
+    tweet_data = preprocess()
 
-    stop_word = np.loadtxt("AI_Model_Resources\stopwords", dtype=str)
-    
-    train_data,train_labels,test_data,test_labels = preprocess()
-    
-    train_text, train_links,train_emojis = seperate_lists(train_data)
-    test_text,test_links,test_emojis = seperate_lists(test_data)
-
-    dframe = pd.DataFrame(data=[train_text,train_links,train_emojis,train_labels], index=["text","links","emojis","label"]).T
-    dframe = dframe.append(pd.DataFrame(data=[test_text,test_links,test_emojis,test_labels], index=["text","links","emojis","label"]).T)
-    
-    dframe.loc[:,"text_stop"] = dframe.loc[:,"text"].apply(lambda x : stopwords(x, stop_word))
-
-    if dframe["text_stop"].isnull().sum()>0:
-        print("Empty text")
-        dframe.dropna(subset=["text_w"], inplace=True)
-
-    print(dframe.shape)
-    
-    # dframe.to_csv('dataframe_stopwords.csv')
-    # print("counts after:")
-    # print(dframe["label"].value_counts())
-
-    #ML classic
-    tr_x_sw, val_x_sw, y_tr_sw, y_val_sw = model_selection.train_test_split(dframe["text_stop"], dframe["label"], random_state=42, stratify=dframe["label"].values, test_size=0.2)
-
-    # For Embeddings
-    tr_x, val_x, y_tr, y_val = model_selection.train_test_split(dframe["text"], dframe["label"], random_state=42, stratify=dframe["label"], test_size=0.2)
 
     encoder = preprocessing.LabelEncoder()
-    tr_y_sw = encoder.fit_transform(y_tr_sw)
-    val_y_sw = encoder.transform(y_val_sw)
-    tr_y = encoder.transform(y_tr)
-    val_y = encoder.transform(y_val)
-    
-    # Compute the class weight with sklearn 
-    class_weights = class_weight.compute_class_weight('balanced',np.unique(y_tr),y_tr)
+    df = pd.DataFrame(tweet_data, columns=['text','links','emojis','labels'])
+    print(df.head())
 
-    print(*[f'Class weight: {round(i[0],4)}\tclass: {i[1]}' for i in zip(class_weights, np.unique(y_tr))], sep='\n')
+    x_train, x_test, y_train, y_test = train_test_split(df['text'],df['labels'],test_size=0.2)
 
-    labels = dframe["label"].unique()
-    test=pd.DataFrame(data=np.transpose([labels,encoder.transform(labels)]), columns=["labels", "encoding"]).sort_values(by=["encoding"])
-    labels=test.labels.tolist()
-    if any([0,1]) in labels and len(labels)==2:
-        labels[labels.index(0)] = "ham"
-        labels[labels.index(1)] = "spam"
+    encoder = preprocessing.LabelEncoder()
 
-    df_results = pd.DataFrame()
+    y_train_e = encoder.fit_transform(y_train)
+    y_test_e = encoder.transform(y_test)
 
-    count_vect = CountVectorizer(analyzer='word', token_pattern=r'\w{1,}')
-    count_vect.fit(dframe["text"]+"_stop")
+    #models = pd.DataFrame(columns=['models','model_object','score'])
 
-    # transform the training and validation data using count vectorizer object
-    xtrain_count =  count_vect.transform(tr_x_sw)
-    xvalid_count =  count_vect.transform(val_x_sw)
+    tf_vect = TfidfVectorizer()
+    tf_vect.fit(df['text'])
 
-    pickle.dump(count_vect, open(os.path.join("","AI_Model_Resources\models","count_vect_model.sav"), 'wb'))
+    train_tf = tf_vect.transform(x_train)
+    test_tf = tf_vect.transform(x_test)
+
+    # NAIVE BAYES
+    Naive = naive_bayes.MultinomialNB()
+    Naive.fit(train_tf,y_train)# predict the labels on validation dataset
+    predictions_NB = Naive.predict(test_tf)# Use accuracy_score function to get the accuracy
+    print("Naive Bayes Accuracy Score -> ",accuracy_score(predictions_NB, y_test)*100)
+
+    # Classifier - Algorithm - SVM
+    # fit the training dataset on the classifier
+    SVM = svm.SVC(C=1.0, kernel='linear', degree=3, gamma='auto')
+    SVM.fit(train_tf,y_train)# predict the labels on validation dataset
+    predictions_SVM = SVM.predict(test_tf)# Use accuracy_score function to get the accuracy
+    print("SVM Accuracy Score -> ",accuracy_score(predictions_SVM, y_test)*100)
+
+    #SVM gridsearch
+    parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],'C': [1, 10, 100, 1000]}, {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+    best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,svm.SVC())
+
+    #Naive Bayes gridsearch
+    parameters = {}
+    best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,naive_bayes.MultinomialNB())
 
 if __name__ == "__main__":
     main()

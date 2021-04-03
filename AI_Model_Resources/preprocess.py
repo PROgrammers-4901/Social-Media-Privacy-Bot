@@ -53,9 +53,10 @@ def remove_upper(tweet_list):
     return tweet_list
 
 def tokens_and_punct(tweet_list):
-    token_regex = RegexpTokenizer(r'@?\w+')
-    text_clean = [token_regex.tokenize(x[3]) for x in tweet_list]
 
+    new_list = [regex.sub(r'@\w+', "" , y[3]) for y in tweet_list]
+    token_regex = RegexpTokenizer(r'\w+')
+    text_clean = [token_regex.tokenize(x) for x in new_list]
     return text_clean
 
 def remove_stopwords(tweet_text_clean_token):
@@ -92,7 +93,6 @@ def lemmatize_text(tweet_text_clean):
 
 def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
     count = 0
-    print(len(tweet_text_clean))
     for x in tweet_text_clean:     
         if len(x) == 0:
             del tweet_text_clean[count]
@@ -101,10 +101,6 @@ def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
             del tweet_emojis[count]       
         count += 1
 
-    print(len(tweet_text_clean))
-    print(len(tweet_list))
-    print(len(tweet_links))
-    print(len(tweet_emojis))
     final = [[clean_text,link,emoji,temp[1]] for clean_text,link,emoji,temp in zip(tweet_text_clean,tweet_links,tweet_emojis,tweet_list)]
 
     return final
@@ -141,4 +137,3 @@ def preprocess():
     tweet_final = remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean)
 
     return tweet_final
-preprocess()
