@@ -52,7 +52,6 @@ def best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,model_choice
 def main():
     tweet_data = preprocess()
 
-
     encoder = preprocessing.LabelEncoder()
     df = pd.DataFrame(tweet_data, columns=['text','links','emojis','labels'])
     print(df.head())
@@ -65,7 +64,10 @@ def main():
     y_test_e = encoder.transform(y_test)
 
     #models = pd.DataFrame(columns=['models','model_object','score'])
-
+      
+    #      
+    # Term frequency inverse document frequency: convert text to numerical format 
+    # other ways: count vectorizering and ngrams
     tf_vect = TfidfVectorizer()
     tf_vect.fit(df['text'])
 
@@ -77,6 +79,8 @@ def main():
     Naive.fit(train_tf,y_train)# predict the labels on validation dataset
     predictions_NB = Naive.predict(test_tf)# Use accuracy_score function to get the accuracy
     print("Naive Bayes Accuracy Score -> ",accuracy_score(predictions_NB, y_test)*100)
+    print(x_test.head())
+    print(predictions_NB[0])
 
     # Classifier - Algorithm - SVM
     # fit the training dataset on the classifier
@@ -84,6 +88,7 @@ def main():
     SVM.fit(train_tf,y_train)# predict the labels on validation dataset
     predictions_SVM = SVM.predict(test_tf)# Use accuracy_score function to get the accuracy
     print("SVM Accuracy Score -> ",accuracy_score(predictions_SVM, y_test)*100)
+    print(predictions_SVM[0])
 
     #SVM gridsearch
     parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],'C': [1, 10, 100, 1000]}, {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]

@@ -54,6 +54,7 @@ def remove_upper(tweet_list):
 
 def tokens_and_punct(tweet_list):
 
+    #Remove all @users in text (possibly next to do hashtag)
     new_list = [regex.sub(r'@\w+', "" , y[3]) for y in tweet_list]
     token_regex = RegexpTokenizer(r'\w+')
     text_clean = [token_regex.tokenize(x) for x in new_list]
@@ -100,6 +101,8 @@ def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
             del tweet_links[count]
             del tweet_emojis[count]       
         count += 1
+
+    #list of list: each element of list is ['text_cleaned','links','emoji_bool','label']
 
     final = [[clean_text,link,emoji,temp[1]] for clean_text,link,emoji,temp in zip(tweet_text_clean,tweet_links,tweet_emojis,tweet_list)]
 
