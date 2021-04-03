@@ -1,11 +1,17 @@
 # Social_Media_Privacy_Bot
 
-##Group Members
+## Group Members
+
 Steven Hurley ---- (CRaiden23)
+
 Alek Racz -------- (lakeczar)
+
 Jonathon Wright -- (JonathonWright-UNT)
+
 Matthew Robinson - (j4ckpot23)
+
 Nicholas Jones --- (ncj0022)
+
 Marcus Summers --- (marcussummersUNT)
 
 ## *HOW TO RUN WITH DOCKER*
