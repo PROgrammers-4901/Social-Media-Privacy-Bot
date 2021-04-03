@@ -2,6 +2,12 @@ import os
 import regex
 import gspread
 import random
+import nltk
+from nltk import pos_tag
+from nltk.corpus import stopwords
+from nltk.corpus import wordnet
+from nltk.tokenize import RegexpTokenizer
+from nltk.stem import WordNetLemmatizer
 
 #Cleaning Data functions
 
@@ -10,7 +16,7 @@ def remove_urls(tweet_list):
 
     tweet_links = []
     urls = regex.compile(r'https?://\S+')
-    for temp in range(1,len(tweet_list)):
+    for temp in range(0,len(tweet_list)):
         tweet_links.append(regex.findall(r'https?://\S+',tweet_list[temp][3]))
 
         tweet_list[temp][3] = (urls.sub(r'',tweet_list[temp][3]))
@@ -30,7 +36,7 @@ def remove_emojis(tweet_list):
                            u"\U00002702-\U000027B0"
                            u"\U000024C2-\U0001F251"
                            "]+", flags=regex.UNICODE)
-    for temp in range(1,len(tweet_list)):
+    for temp in range(0,len(tweet_list)):
         if emojis.search(tweet_list[temp][3]) == None:
             tweet_emojis.append(False)
         else:
@@ -41,11 +47,67 @@ def remove_emojis(tweet_list):
 # Remove upper case
 def remove_upper(tweet_list):
 
-    for temp in range(1,len(tweet_list)):
-        tweet_list[temp][3] = tweet_list[temp][3].lower()
+    for num in range(0,len(tweet_list)):
+        tweet_list[num][3] = tweet_list[num][3].lower()
 
     return tweet_list
 
+def tokens_and_punct(tweet_list):
+    token_regex = RegexpTokenizer(r'@?\w+')
+    text_clean = [token_regex.tokenize(x[3]) for x in tweet_list]
+
+    return text_clean
+
+def remove_stopwords(tweet_text_clean_token):
+    nltk.download('stopwords')
+    stop = stopwords.words('english')
+    #remove text related to retweet
+    stop.append("rt")
+    text = [[x for x in temp if x not in stop] for temp in tweet_text_clean_token]
+
+    return text
+
+
+def get_wordnet_pos(pos_tag):
+    if pos_tag.startswith('J'):
+        return wordnet.ADJ
+    elif pos_tag.startswith('V'):
+        return wordnet.VERB
+    elif pos_tag.startswith('N'):
+        return wordnet.NOUN
+    elif pos_tag.startswith('R'):
+        return wordnet.ADV
+    else:
+        return wordnet.NOUN
+
+def lemmatize_text(tweet_text_clean):
+    nltk.download('averaged_perceptron_tagger')
+    nltk.download('wordnet')
+    text_lem = []
+    for text in tweet_text_clean:
+        pos_tags = pos_tag(text)
+        text_lem.append([WordNetLemmatizer().lemmatize(t[0], get_wordnet_pos(t[1])) for t in pos_tags])
+    
+    return text_lem
+
+def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
+    count = 0
+    print(len(tweet_text_clean))
+    for x in tweet_text_clean:     
+        if len(x) == 0:
+            del tweet_text_clean[count]
+            del tweet_list[count]
+            del tweet_links[count]
+            del tweet_emojis[count]       
+        count += 1
+
+    print(len(tweet_text_clean))
+    print(len(tweet_list))
+    print(len(tweet_links))
+    print(len(tweet_emojis))
+    final = [[clean_text,link,emoji,temp[1]] for clean_text,link,emoji,temp in zip(tweet_text_clean,tweet_links,tweet_emojis,tweet_list)]
+
+    return final
 def preprocess():
 
     #Currently only works on Alek's computer, will add dynamic credentials finding later
@@ -61,25 +123,22 @@ def preprocess():
     ham_tweet_list = ham_tweet_sheet.get_all_values()
     test_tweet_list = test_tweet_sheet.get_all_values()
     spam_tweet_list = spam_tweet_sheet.get_all_values()
+
+    #Take equal number of spam list form ham list
+    random_ham = random.choices(ham_tweet_list[1:], k=len(spam_tweet_list))
+
+    tweet_list = random_ham + test_tweet_list[1:] + spam_tweet_list[1:]
     
-    ham_tweet_list,ham_tweet_links = remove_urls(ham_tweet_list)
-    ham_tweet_list,ham_emojis = remove_emojis(ham_tweet_list)
+    #Cleaning
+    tweet_list,tweet_links = remove_urls(tweet_list)
+    tweet_list,tweet_emojis = remove_emojis(tweet_list)
+    tweet_list = remove_upper(tweet_list)
+    tweet_text_clean_token = tokens_and_punct(tweet_list)
+    tweet_text_clean = remove_stopwords(tweet_text_clean_token)
+    tweet_text_clean = lemmatize_text(tweet_text_clean)
+    tweet_text_clean = [" ".join(x) for x in tweet_text_clean]
 
-    spam_tweet_list,spam_tweet_links = remove_urls(spam_tweet_list)
-    spam_tweet_list,spam_emojis = remove_emojis(spam_tweet_list)
+    tweet_final = remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean)
 
-    test_tweet_list,test_tweet_links = remove_urls(test_tweet_list)
-    test_tweet_list,test_emojis = remove_emojis(test_tweet_list)
-
-    test_data = [[temp[3],link,emoji] for temp,link,emoji in zip(test_tweet_list[1:],test_tweet_links,test_emojis)]
-    test_labels = [temp[1] for temp in test_tweet_list[1:]]
-
-    train_data = [[temp[3],link,emoji] for temp,link,emoji in zip(spam_tweet_list[1:],spam_tweet_links,spam_emojis)]
-    train_labels = [temp[1] for temp in spam_tweet_list[1:]]
-
-    temp_tweet_list = [[temp[3],link,emoji] for temp,link,emoji in zip(ham_tweet_list[1:],ham_tweet_links,ham_emojis)]
-    spam_count = len(train_data)
-    train_data += random.choices([temp for temp in temp_tweet_list[1:]], k=spam_count)
-    train_labels += [temp[1] for temp in ham_tweet_list[1:spam_count+1]]
-
-    return train_data,train_labels,test_data,test_labels
+    return tweet_final
+preprocess()
