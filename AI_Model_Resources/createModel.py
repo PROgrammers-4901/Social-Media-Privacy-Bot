@@ -54,7 +54,7 @@ def main():
 
     encoder = preprocessing.LabelEncoder()
     df = pd.DataFrame(tweet_data, columns=['text','links','emojis','labels'])
-    print(df.head())
+    #print(df.head())
 
     x_train, x_test, y_train, y_test = train_test_split(df['text'],df['labels'],test_size=0.2)
 
@@ -79,8 +79,9 @@ def main():
     Naive.fit(train_tf,y_train)# predict the labels on validation dataset
     predictions_NB = Naive.predict(test_tf)# Use accuracy_score function to get the accuracy
     print("Naive Bayes Accuracy Score -> ",accuracy_score(predictions_NB, y_test)*100)
-    print(x_test.head())
-    print(predictions_NB[0])
+    print("Prediction for [0]:",predictions_NB[0])
+    print("test x value:",x_test.head(1))
+    print("test y value:",y_test.head(1))
 
     # Classifier - Algorithm - SVM
     # fit the training dataset on the classifier
@@ -97,6 +98,7 @@ def main():
     #Naive Bayes gridsearch
     parameters = {}
     best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,naive_bayes.MultinomialNB())
+
 
 if __name__ == "__main__":
     main()
