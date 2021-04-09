@@ -17,9 +17,9 @@ def remove_urls(tweet_list):
     tweet_links = []
     urls = regex.compile(r'https?://\S+')
     for temp in range(0,len(tweet_list)):
-        tweet_links.append(regex.findall(r'https?://\S+',tweet_list[temp][3]))
+        tweet_links.append(regex.findall(r'https?://\S+',tweet_list[temp][0]))
 
-        tweet_list[temp][3] = (urls.sub(r'',tweet_list[temp][3]))
+        tweet_list[temp][0] = (urls.sub(r'',tweet_list[temp][0]))
     
     return tweet_list,tweet_links
 
@@ -37,25 +37,25 @@ def remove_emojis(tweet_list):
                            u"\U000024C2-\U0001F251"
                            "]+", flags=regex.UNICODE)
     for temp in range(0,len(tweet_list)):
-        if emojis.search(tweet_list[temp][3]) == None:
+        if emojis.search(tweet_list[temp][0]) == None:
             tweet_emojis.append(False)
         else:
             tweet_emojis.append(True)
-        tweet_list[temp][3] = emojis.sub(r'',tweet_list[temp][3])
+        tweet_list[temp][0] = emojis.sub(r'',tweet_list[temp][0])
     return tweet_list,tweet_emojis
 
 # Remove upper case
 def remove_upper(tweet_list):
 
     for num in range(0,len(tweet_list)):
-        tweet_list[num][3] = tweet_list[num][3].lower()
+        tweet_list[num][0] = tweet_list[num][0].lower()
 
     return tweet_list
 
 def tokens_and_punct(tweet_list):
 
     #Remove all @users in text (possibly next to do hashtag)
-    new_list = [regex.sub(r'@\w+', "" , y[3]) for y in tweet_list]
+    new_list = [regex.sub(r'@\w+', "" , y[0]) for y in tweet_list]
     token_regex = RegexpTokenizer(r'\w+')
     text_clean = [token_regex.tokenize(x) for x in new_list]
     return text_clean
@@ -107,28 +107,35 @@ def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
     final = [[clean_text,link,emoji,temp[1]] for clean_text,link,emoji,temp in zip(tweet_text_clean,tweet_links,tweet_emojis,tweet_list)]
 
     return final
-def preprocess():
+def preprocess(tweet_input = ""):
 
-    #Currently only works on Alek's computer, will add dynamic credentials finding later
-    to_path = os.path.join( os.getcwd(), '.vscode\social-media-privacy-bot-sheet-40065e2a0d5b.json')
+    if tweet_input == "":
+        #Currently only works on Alek's computer, will add dynamic credentials finding later
+        #FOR TRAINING PURPOSES
+        to_path = os.path.join( os.getcwd(), '.vscode\social-media-privacy-bot-sheet-40065e2a0d5b.json')
    
-    gc = gspread.service_account(filename=to_path)
-    tweet_sheet = gc.open("tweet_data")
+        gc = gspread.service_account(filename=to_path)
+        tweet_sheet = gc.open("tweet_data")
     
-    ham_tweet_sheet = tweet_sheet.get_worksheet(0)
-    test_tweet_sheet = tweet_sheet.get_worksheet(1)
-    spam_tweet_sheet = tweet_sheet.get_worksheet(2)
+        ham_tweet_sheet = tweet_sheet.get_worksheet(0)
+        test_tweet_sheet = tweet_sheet.get_worksheet(1)
+        spam_tweet_sheet = tweet_sheet.get_worksheet(2)
 
-    ham_tweet_list = ham_tweet_sheet.get_all_values()
-    test_tweet_list = test_tweet_sheet.get_all_values()
-    spam_tweet_list = spam_tweet_sheet.get_all_values()
+        ham_tweet_list = ham_tweet_sheet.get_all_values()
+        test_tweet_list = test_tweet_sheet.get_all_values()
+        spam_tweet_list = spam_tweet_sheet.get_all_values()
 
-    #Take equal number of spam list form ham list
-    random_ham = random.choices(ham_tweet_list[1:], k=len(spam_tweet_list))
+        #Take equal number of spam list form ham list
+        #FOR TRAINING PURPOSES
+        random_ham = random.choices(ham_tweet_list[1:], k=len(spam_tweet_list))
 
-    tweet_list = random_ham + test_tweet_list[1:] + spam_tweet_list[1:]
-    
+        tweet_list = random_ham + test_tweet_list[1:] + spam_tweet_list[1:]
+        tweet_list = [[temp[3],temp[1]] for temp in tweet_list]
+    else:
+        tweet_list = tweet_input
+
     #Cleaning
+    #tweet_list object = [[id,label,exists,test],....]. From the google sheet format.
     tweet_list,tweet_links = remove_urls(tweet_list)
     tweet_list,tweet_emojis = remove_emojis(tweet_list)
     tweet_list = remove_upper(tweet_list)
@@ -137,6 +144,10 @@ def preprocess():
     tweet_text_clean = lemmatize_text(tweet_text_clean)
     tweet_text_clean = [" ".join(x) for x in tweet_text_clean]
 
-    tweet_final = remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean)
+    if tweet_final == "":
+        tweet_final = remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean)
+    else:
+        tweet_final = final = [[clean_text,link,emoji] for clean_text,link,emoji,temp in zip(tweet_text_clean,tweet_links,tweet_emojis)]
 
+    #Return is list of list. Each list element is [text,links,emoji_boolean_check,label] or [text,links,emoji_boolean_check] if inputted data
     return tweet_final
