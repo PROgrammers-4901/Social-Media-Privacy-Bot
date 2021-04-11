@@ -28,7 +28,7 @@ def predict_text(tweet_object):
 
     print("Prediction NB:",predictions_NB)
     probability = naive_model.predict_proba(input_tf)
-
+    print(probability)
     response = {}
 
     if len(tweet_object) > 1:
@@ -53,18 +53,18 @@ def predict_text(tweet_object):
         for item in range(0, len(tweet_object)):
             tweet_text = tweet_object[item][0]
             prediction = predictions_SVM[item]
-            tweet_probability = probability[item][prediction]
-            response.update({item: {
+            tweet_probability = probability[item][int(prediction)]
+            response.update({
                 'tweet': tweet_text,
                 'prediction': prediction,
                 'probability': tweet_probability
-            }})
+            })
 
     
     return json.dumps(response)
 
 
 
-input_stuff = [["RT @odinodin: I just made a tool for inspecting data in a Reagent app as a tree structure, data-frisk.  https://t.co/wWQz9YInP3"],[r"Although you're fully capable of understanding both sides of a... More for Libra https://t.co/l0Toev12wH"],["WDW Canine Extravaganza 2016, Woodford Working Men's Club, WOODFORD Schedule – Sunday 29th… https://t.co/cyJII1qIzY https://t.co/REhua2Jxcg"]]
+input_stuff = [["RT @odinodin: I just made a tool for inspecting data in a Reagent app as a tree structure, data-frisk.  https://t.co/wWQz9YInP3"]]
 
 print(predict_text(input_stuff))
