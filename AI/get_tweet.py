@@ -3,7 +3,7 @@ import os
 import json
 
 def getTweet(tweet_id):
-    BEARER_TOKEN = r"AAAAAAAAAAAAAAAAAAAAEBCMgEAAAAA4mf%2FWbcvmcj7Mz3%2F66YsqZ7uAeA%3D1mhrSzcclXYcpmdKvPhrMqHKH4kk2uiSVv4Jci3fQQ30tSRgpf"
+    BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
 
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",
@@ -47,8 +47,8 @@ def getUser(username):
     return tweets
 
 def getHashtag(tag):
-    username = username.strip('#@ ')
-    BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
+    tag = tag.strip('#@ ')
+    BEARER_TOKEN =  os.environ.get('BEARER_TOKEN')
     tweets = []
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",
