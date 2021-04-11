@@ -29,12 +29,19 @@ def predict_text(tweet_object):
     print("Prediction NB:",predictions_NB)
     probability = naive_model.predict_proba(input_tf)
 
-    json_send = {
-        'tweets': tweet_object,
-        'predictions': predictions_NB,
-        'probability': probability
-    }
+    response = {}
 
+    for item in range(len(tweet_object)):
+        tweet_text = tweet_object[item][0]
+        prediction = predictions_SVM[item]
+        tweet_probability = probability[item][prediction]
+        response.update({item: {
+            'tweet': tweet_text,
+            'prediction': prediction,
+            'probability': tweet_probability
+        }})
+
+    
     return json.dumps(json_send)
 
 
