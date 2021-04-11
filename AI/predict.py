@@ -10,9 +10,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 #Loads pickle matrices/models and uses the inputted tweet object [[text],[text]..] to be predicted
 #Returns 
 def predict_text(tweet_object):
-    tfid_path = "AI\\pickle_dumps\\tfid.pickle"
-    svm_path = "AI\\pickle_dumps\\svm.pickle"
-    naive_path = "AI\\pickle_dumps\\naive.pickle"
+    tfid_path = "pickle_dumps/tfid.pickle"
+    svm_path = "pickle_dumps/svm.pickle"
+    naive_path = "pickle_dumps/naive.pickle"
 
     tf_convert = pickle.load(open(tfid_path,'rb'))
     svm_model = pickle.load(open(svm_path,'rb'))
@@ -35,7 +35,7 @@ def predict_text(tweet_object):
         sums = 0
         temp = 0
         x = 0
-        for item in len(predictions_NB):
+        for item in range(0, len(tweet_object)):
             sums += int(predictions_NB[item])
             if x < probability[item][1]:
                 x = probability[item][1]
@@ -61,10 +61,10 @@ def predict_text(tweet_object):
             }})
 
     
-    return json.dumps(json_send)
+    return json.dumps(response)
 
 
 
 input_stuff = [["RT @odinodin: I just made a tool for inspecting data in a Reagent app as a tree structure, data-frisk.  https://t.co/wWQz9YInP3"],[r"Although you're fully capable of understanding both sides of a... More for Libra https://t.co/l0Toev12wH"],["WDW Canine Extravaganza 2016, Woodford Working Men's Club, WOODFORD Schedule – Sunday 29th… https://t.co/cyJII1qIzY https://t.co/REhua2Jxcg"]]
 
-predict_text(input_stuff)
+print(predict_text(input_stuff))
