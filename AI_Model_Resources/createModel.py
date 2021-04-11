@@ -50,9 +50,9 @@ def best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,model_choice
         print()
 
 def main():
-    tfid_path = "pickle_dumps/tfid.pickle"
-    naive_path = "pickle_dumps/naive.pickle"
-    svm_path = "pickle_dumps/svm.pickle"
+    tfid_path = "AI/pickle_dumps/tfid.pickle"
+    naive_path = "AI/pickle_dumps/naive.pickle"
+    svm_path = "AI/pickle_dumps/svm.pickle"
 
     tweet_data = preprocess()
 
