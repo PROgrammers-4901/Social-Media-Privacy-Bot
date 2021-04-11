@@ -62,9 +62,3 @@ def predict_text(tweet_object):
 
     
     return json.dumps(response)
-
-
-
-input_stuff = [["RT @odinodin: I just made a tool for inspecting data in a Reagent app as a tree structure, data-frisk.  https://t.co/wWQz9YInP3"]]
-
-print(predict_text(input_stuff))
