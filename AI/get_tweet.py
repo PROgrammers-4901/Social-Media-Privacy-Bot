@@ -2,6 +2,8 @@ import requests
 import os
 import json
 
+from createModel import predict_tweet
+
 def getTweet(tweet_id):
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
 
@@ -9,8 +11,15 @@ def getTweet(tweet_id):
         'Authorization': f"Bearer {BEARER_TOKEN}",
     }
     
-    return requests.get(f'https://api.twitter.com/2/tweets/{tweet_id}', headers=headers)
+    raw = requests.get(f'https://api.twitter.com/2/tweets/{tweet_id}', headers=headers).text
 
+    j_text = json.loads(raw)
+
+    if not 'data' in j_text:
+        return
+
+    tweet = [j_text['data']['text']]
+    return [tweet]
 
 def getUser(username):
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
@@ -27,8 +36,14 @@ def getUser(username):
     params = {
         "max_results": 100
     }
-
-    return requests.get(f'https://api.twitter.com/2/users/{user_id}/tweets', params=params, headers=headers)
+    x = json.loads(requests.get(f'https://api.twitter.com/2/users/{user_id}/tweets', params=params, headers=headers).text)
+    if 'data' not in x:
+        return None
+    tweets = []
+    for item in x['data']:
+        tweets.append([item['text']])
+    
+    return tweets
 
 def getHashtag(tag):
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
@@ -44,25 +59,34 @@ def getHashtag(tag):
     
     x = requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
     x = json.loads(x.text)
-    tweets.append(x)
-    if 'next_token' in x['meta']:
+    # tweets.append(x)
+    for item in x['data']:
+        tweets.append([item['text']])
+    if 'meta' in x:
+        if 'next_token' in x['meta']:
             next_token = x['meta']['next_token']
-            truthy = True
+        else:
+            truthy = False
     else:
-        truthy = False
-
+        truthy = False 
     while (truthy):
         if (len(tweets) > 4):
             truthy = False
         params.update({'next_token': next_token})
         x = requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
         x = json.loads(x.text)
-        tweets.append(x)
-        if 'next_token' in x['meta']:
-            next_token = x['meta']['next_token']
+        for item in x['data']:
+            tweets.append([item['text']])
+        if 'meta' in x:
+            if 'next_token' in x['meta']:
+                next_token = x['meta']['next_token']
+            else:
+                truthy = False
         else:
             truthy = False
     
+    # predict_tweet(tweet_list=tweets)
+    
     return tweets
 
-print(json.dumps(getHashtag('stopDMCA'), indent=4))
+print(getTweet('1374431516655153157'))
