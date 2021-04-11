@@ -31,15 +31,34 @@ def predict_text(tweet_object):
 
     response = {}
 
-    for item in range(len(tweet_object)):
-        tweet_text = tweet_object[item][0]
-        prediction = predictions_SVM[item]
-        tweet_probability = probability[item][prediction]
-        response.update({item: {
-            'tweet': tweet_text,
-            'prediction': prediction,
-            'probability': tweet_probability
-        }})
+    if len(tweet_object) > 1:
+        sums = 0
+        temp = 0
+        x = 0
+        for item in len(predictions_NB):
+            sums += int(predictions_NB[item])
+            if x < probability[item][1]:
+                x = probability[item][1]
+                temp = tweet_object[item][0]
+        spam_percentage = sums/len(tweet_object)
+
+        response.update({
+            'percentage': spam_percentage,
+            'tweet_text': temp,
+            'tweet_probability': x
+        })
+
+    
+    else:
+        for item in range(0, len(tweet_object)):
+            tweet_text = tweet_object[item][0]
+            prediction = predictions_SVM[item]
+            tweet_probability = probability[item][prediction]
+            response.update({item: {
+                'tweet': tweet_text,
+                'prediction': prediction,
+                'probability': tweet_probability
+            }})
 
     
     return json.dumps(json_send)
