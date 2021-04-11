@@ -1,12 +1,12 @@
 from preprocess import *
-from IPython.display import display
 import pandas as pd
 import sklearn
+import pickle
 from sklearn import preprocessing
-from sklearn import naive_bayes, svm
+from sklearn import naive_bayes,svm,linear_model
 from sklearn.model_selection import GridSearchCV,train_test_split
 from sklearn.metrics import accuracy_score,classification_report
-from sklearn.feature_extraction.text import CountVectorizer,TfidfVectorizer
+from sklearn.feature_extraction.text import TfidfVectorizer
 
 def link_to_bool(temp):
     if not temp:
@@ -50,19 +50,18 @@ def best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,model_choice
         print()
 
 def main():
+    tfid_path = "pickle_dumps/tfid.pickle"
+    naive_path = "pickle_dumps/naive.pickle"
+    svm_path = "pickle_dumps/svm.pickle"
+
     tweet_data = preprocess()
 
-    encoder = preprocessing.LabelEncoder()
     df = pd.DataFrame(tweet_data, columns=['text','links','emojis','labels'])
     #print(df.head())
 
     x_train, x_test, y_train, y_test = train_test_split(df['text'],df['labels'],test_size=0.2)
 
-    encoder = preprocessing.LabelEncoder()
-
-    y_train_e = encoder.fit_transform(y_train)
-    y_test_e = encoder.transform(y_test)
-
+    
     #models = pd.DataFrame(columns=['models','model_object','score'])
       
     #      
@@ -71,33 +70,41 @@ def main():
     tf_vect = TfidfVectorizer()
     tf_vect.fit(df['text'])
 
-    train_tf = tf_vect.transform(x_train)
-    test_tf = tf_vect.transform(x_test)
+    pickle.dump(tf_vect,open(tfid_path,'wb'))
+    tf_pickle = pickle.load(open(tfid_path,'rb'))
+    train_tf = tf_pickle.transform(x_train)
+    test_tf = tf_pickle.transform(x_test)
 
     # NAIVE BAYES
     Naive = naive_bayes.MultinomialNB()
     Naive.fit(train_tf,y_train)# predict the labels on validation dataset
-    predictions_NB = Naive.predict(test_tf)# Use accuracy_score function to get the accuracy
+    pickle.dump(Naive,open(naive_path,'wb'))
+    naive_pickle = pickle.load(open(naive_path,'rb'))
+    predictions_NB = naive_pickle.predict(test_tf)# Use accuracy_score function to get the accuracy
     print("Naive Bayes Accuracy Score -> ",accuracy_score(predictions_NB, y_test)*100)
     print("Prediction for [0]:",predictions_NB[0])
     print("test x value:",x_test.head(1))
     print("test y value:",y_test.head(1))
 
+    
+
     # Classifier - Algorithm - SVM
     # fit the training dataset on the classifier
     SVM = svm.SVC(C=1.0, kernel='linear', degree=3, gamma='auto')
     SVM.fit(train_tf,y_train)# predict the labels on validation dataset
-    predictions_SVM = SVM.predict(test_tf)# Use accuracy_score function to get the accuracy
+    pickle.dump(SVM,open(svm_path,'wb'))
+    svm_pickle = pickle.load(open(svm_path,'rb'))
+    predictions_SVM = svm_pickle.predict(test_tf)# Use accuracy_score function to get the accuracy
     print("SVM Accuracy Score -> ",accuracy_score(predictions_SVM, y_test)*100)
     print(predictions_SVM[0])
+    
+    # #SVM gridsearch
+    # parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],'C': [1, 10, 100, 1000]}, {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
+    # best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,svm.SVC())
 
-    #SVM gridsearch
-    parameters = [{'kernel': ['rbf'], 'gamma': [1e-3, 1e-4],'C': [1, 10, 100, 1000]}, {'kernel': ['linear'], 'C': [1, 10, 100, 1000]}]
-    best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,svm.SVC())
-
-    #Naive Bayes gridsearch
-    parameters = {}
-    best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,naive_bayes.MultinomialNB())
+    # #Naive Bayes gridsearch
+    # parameters = {}
+    # best_parameters_test(parameters,train_tf,test_tf,y_train,y_test,naive_bayes.MultinomialNB())
 
 
 if __name__ == "__main__":

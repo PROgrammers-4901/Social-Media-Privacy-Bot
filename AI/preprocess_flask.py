@@ -1,6 +1,5 @@
 import os
 import regex
-import gspread
 import random
 import nltk
 from nltk import pos_tag
@@ -109,30 +108,7 @@ def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
     return final
 def preprocess(tweet_input = ""):
 
-    if tweet_input == "":
-        #Currently only works on Alek's computer, will add dynamic credentials finding later
-        #FOR TRAINING PURPOSES
-        to_path = os.path.join( os.getcwd(), '.vscode\social-media-privacy-bot-sheet-40065e2a0d5b.json')
-   
-        gc = gspread.service_account(filename=to_path)
-        tweet_sheet = gc.open("tweet_data")
-    
-        ham_tweet_sheet = tweet_sheet.get_worksheet(0)
-        test_tweet_sheet = tweet_sheet.get_worksheet(1)
-        spam_tweet_sheet = tweet_sheet.get_worksheet(2)
-
-        ham_tweet_list = ham_tweet_sheet.get_all_values()
-        test_tweet_list = test_tweet_sheet.get_all_values()
-        spam_tweet_list = spam_tweet_sheet.get_all_values()
-
-        #Take equal number of spam list form ham list
-        #FOR TRAINING PURPOSES
-        random_ham = random.choices(ham_tweet_list[1:], k=len(spam_tweet_list))
-
-        tweet_list = random_ham + test_tweet_list[1:] + spam_tweet_list[1:]
-        tweet_list = [[temp[3],temp[1]] for temp in tweet_list]
-    else:
-        tweet_list = tweet_input
+    tweet_list = tweet_input
 
     #Cleaning
     #tweet_list object = [[id,label,exists,test],....]. From the google sheet format.
@@ -144,10 +120,9 @@ def preprocess(tweet_input = ""):
     tweet_text_clean = lemmatize_text(tweet_text_clean)
     tweet_text_clean = [" ".join(x) for x in tweet_text_clean]
 
-    if tweet_input == "":
-        tweet_final = remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean)
-    else:
-        tweet_final = final = [[clean_text,link,emoji] for clean_text,link,emoji in zip(tweet_text_clean,tweet_links,tweet_emojis)]
 
-    #Return is list of list. Each list element is [text,links,emoji_boolean_check,label] or [text,links,emoji_boolean_check] if inputted data
+    #tweet_final = [[clean_text,link,emoji] for clean_text,link,emoji in zip(tweet_text_clean,tweet_links,tweet_emojis)]
+    tweet_final = [[clean_text] for clean_text in tweet_text_clean]
+
+    #Return is list of list. Each list element is [text,links,emoji_boolean_check] for inputted data
     return tweet_final
