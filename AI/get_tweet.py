@@ -22,6 +22,7 @@ def getTweet(tweet_id):
     return [tweet]
 
 def getUser(username):
+    username = username.strip('@ ')
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
 
     headers = {
@@ -31,6 +32,8 @@ def getUser(username):
     user_data = requests.get(f'https://api.twitter.com/2/users/by/username/{username}', headers=headers)
 
     user_data = json.loads(user_data.text)
+    if 'data' not in user_data:
+        return None
     user_id = user_data['data']['id']
 
     params = {
@@ -46,6 +49,7 @@ def getUser(username):
     return tweets
 
 def getHashtag(tag):
+    username = username.strip('#@ ')
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
     tweets = []
     headers = {
@@ -59,7 +63,8 @@ def getHashtag(tag):
     
     x = requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
     x = json.loads(x.text)
-    # tweets.append(x)
+    if 'data' not in x:
+        return None
     for item in x['data']:
         tweets.append([item['text']])
     if 'meta' in x:
@@ -85,8 +90,5 @@ def getHashtag(tag):
         else:
             truthy = False
     
-    # predict_tweet(tweet_list=tweets)
     
     return tweets
-
-print(getTweet('1374431516655153157'))
