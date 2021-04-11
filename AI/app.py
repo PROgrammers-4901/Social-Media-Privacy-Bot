@@ -1,4 +1,5 @@
 import json
+from predict import *
 from flask import Flask
 from flask_cors import CORS
 from get_tweet import getTweet, getUser, getHashtag
@@ -8,12 +9,12 @@ CORS(app)
 
 @app.route('/tweet_id/<id>', methods=['GET'])
 def tweet_by_id(id):
-    return getTweet(id).text
+    return predict_text(getTweet(id))
 
 @app.route('/username/<username>', methods=['GET'])
 def tweet_by_user(username):
-    return getUser(username).text
+    return predict_text(getUser(username))
 
 @app.route('/hashtag/<tag>', methods=['GET'])
 def tweet_by_hashtag(tag):
-    return json.dumps(getHashtag(tag),indent=4)
+    return predict_text(getHashtag(tag))
