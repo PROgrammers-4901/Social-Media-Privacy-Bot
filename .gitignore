@@ -21,3 +21,8 @@ node_modules/
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
+
+# .vscode folder
+/.vscode
+/AI_Model_Resources/models
+/__pycache__
