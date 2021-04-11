@@ -2,10 +2,8 @@ import requests
 import os
 import json
 
-from createModel import predict_tweet
-
 def getTweet(tweet_id):
-    BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
+    BEARER_TOKEN = r"AAAAAAAAAAAAAAAAAAAAEBCMgEAAAAA4mf%2FWbcvmcj7Mz3%2F66YsqZ7uAeA%3D1mhrSzcclXYcpmdKvPhrMqHKH4kk2uiSVv4Jci3fQQ30tSRgpf"
 
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",

@@ -9,7 +9,10 @@ CORS(app)
 
 @app.route('/tweet_id/<id>', methods=['GET'])
 def tweet_by_id(id):
-    return predict_text(getTweet(id))
+    get_tweet_text = getTweet(id)
+    if get_tweet_text == None:
+        return
+    return predict_text(get_tweet_text)
 
 @app.route('/username/<username>', methods=['GET'])
 def tweet_by_user(username):
