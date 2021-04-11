@@ -27,12 +27,18 @@ def predict_text(tweet_object):
     predictions_NB = naive_model.predict(input_tf)
 
     print("Prediction NB:",predictions_NB)
-    print("Predict_proba",naive_model.predict_proba(input_tf))
-    json_send = [[temp_nb,temp_prob] for temp_nb,temp_prob in predictions_NB,naive_model.predict_proba(input_tf)]
-    json_return = {}
-    for x,y,z in tweet_object,predictions_NB,naive_model.predict_proba(input_tf):
-        json_return.append()
+    probability = naive_model.predict_proba(input_tf)
+
+    json_send = {
+        'tweets': tweet_object,
+        'predictions': predictions_NB,
+        'probability': probability
+    }
+
     return json.dumps(json_send)
+
+
+
 input_stuff = [["RT @odinodin: I just made a tool for inspecting data in a Reagent app as a tree structure, data-frisk.  https://t.co/wWQz9YInP3"],[r"Although you're fully capable of understanding both sides of a... More for Libra https://t.co/l0Toev12wH"],["WDW Canine Extravaganza 2016, Woodford Working Men's Club, WOODFORD Schedule – Sunday 29th… https://t.co/cyJII1qIzY https://t.co/REhua2Jxcg"]]
 
 predict_text(input_stuff)
