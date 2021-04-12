@@ -61,6 +61,7 @@ def getHashtag(tag):
     
     x = requests.get(f'https://api.twitter.com/2/tweets/search/recent', params=params, headers=headers)
     x = json.loads(x.text)
+    truthy = True
     if 'data' not in x:
         return None
     for item in x['data']:
@@ -90,3 +91,5 @@ def getHashtag(tag):
     
     
     return tweets
+
+print(getHashtag('pokemon'))
