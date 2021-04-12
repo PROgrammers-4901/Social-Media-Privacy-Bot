@@ -11,13 +11,32 @@ CORS(app)
 def tweet_by_id(id):
     get_tweet_text = getTweet(id)
     if get_tweet_text == None:
-        return
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
     return predict_text(get_tweet_text)
 
 @app.route('/username/<username>', methods=['GET'])
 def tweet_by_user(username):
-    return predict_text(getUser(username))
+    get_tweet_text = getUser(username)
+    if get_tweet_text == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return predict_text(get_tweet_text)
 
 @app.route('/hashtag/<tag>', methods=['GET'])
 def tweet_by_hashtag(tag):
-    return predict_text(getHashtag(tag))
+    get_tweet_text = getHashtag(tag)
+    if get_tweet_text == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return predict_text(get_tweet_text)
+

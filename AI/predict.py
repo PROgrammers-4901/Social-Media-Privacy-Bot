@@ -31,7 +31,7 @@ def predict_text(tweet_object):
     print(probability)
     response = {}
 
-    if len(tweet_object) > 1:
+    if len(tweet_object) > 1: #multiple tweets
         sums = 0
         temp = 0
         x = 0
@@ -43,13 +43,13 @@ def predict_text(tweet_object):
         spam_percentage = sums/len(tweet_object)
 
         response.update({
-            'percentage': spam_percentage,
-            'tweet_text': temp,
-            'tweet_probability': x
+            'tweet': temp,
+            'prediction': spam_percentage, #percentage
+            'tweet_probability': x 
         })
 
     
-    else:
+    else: #single tweet
         for item in range(0, len(tweet_object)):
             tweet_text = tweet_object[item][0]
             prediction = predictions_SVM[item]
