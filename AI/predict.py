@@ -10,9 +10,9 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 #Loads pickle matrices/models and uses the inputted tweet object [[text],[text]..] to be predicted
 #Returns 
 def predict_text(tweet_object):
-    tfid_path = "pickle_dumps/tfid.pickle"
-    svm_path = "pickle_dumps/svm.pickle"
-    naive_path = "pickle_dumps/naive.pickle"
+    tfid_path = os.getcwd + "/pickle_dumps/tfid.pickle"
+    svm_path = os.getcwd + "/pickle_dumps/svm.pickle"
+    naive_path = os.getcwd + "/pickle_dumps/naive.pickle"
 
     tf_convert = pickle.load(open(tfid_path,'rb'))
     svm_model = pickle.load(open(svm_path,'rb'))
