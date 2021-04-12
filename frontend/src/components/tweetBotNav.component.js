@@ -65,6 +65,7 @@ export default class TweetBotNav extends Component {
 
                     this.setState({
                         output:{
+                            type: this.state.function,
                             tweet: res.data.tweet,
                             label: res.data.prediction,
                             confidence: res.data.probability
@@ -87,9 +88,10 @@ export default class TweetBotNav extends Component {
                 
                 this.setState({
                     output:{
+                        type: this.state.function,
                         tweet: res.data.tweet,
                         label: res.data.prediction,
-                        confidence: res.data.probability
+                        confidence: res.data.tweet_probability
                     }
                 });
             })
@@ -104,9 +106,10 @@ export default class TweetBotNav extends Component {
                 
                 this.setState({
                     output:{
+                        type: this.state.function,
                         tweet: res.data.tweet,
                         label: res.data.prediction,
-                        confidence: res.data.probability
+                        confidence: res.data.tweet_probability
                     }
                 });
             })

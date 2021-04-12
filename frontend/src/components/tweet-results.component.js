@@ -6,6 +6,7 @@ export default class TweetResults extends Component {
         super(props);
 
         this.state = {
+            type: "Empty",
             tweet : "",
             label : -1,
             confidence : 0.0
@@ -15,6 +16,7 @@ export default class TweetResults extends Component {
     componentDidUpdate(prevProps) {
         if(prevProps.results !== this.props.results) {
             this.setState({
+                type: this.props.results.type,
                 tweet: this.props.results.tweet,
                 label: this.props.results.label,
                 confidence: this.props.results.confidence
@@ -22,6 +24,40 @@ export default class TweetResults extends Component {
         }
 
         console.log(this.state);
+    }
+
+    writeOutput() {
+        var results = "";
+
+        if(this.state.label != -1)
+        {
+
+            switch (this.state.type) {
+                default:
+                case "Tweet": 
+                    if(this.state.label == 0)
+                        results += "HAM\n";
+                    else
+                        results += "SPAM\n";
+
+                    results += this.state.tweet;
+
+                    results += "\n\n Confidence: " + (this.state.confidence*100).toFixed(0) + "%";
+                    break;
+
+                case "Account": 
+                case "Hashtag": 
+                    results += "This "+ this.state.type +" is " + (this.state.label*100).toFixed(0) +"% spam!\n\n";
+                    results += "Spammiest Tweet:\n" + (this.state.tweet) + "\n\nConfidence: " + this.state.confidence;
+                    break;
+            }
+        }
+        else
+        {
+            results = "Tweet results";
+        }
+
+        return results;
     }
 
     render() {
@@ -36,11 +72,7 @@ export default class TweetResults extends Component {
                         name="message" 
                         className="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-3" 
                         readOnly
-                        value={this.state.label != -1 ? 
-                            this.state.label == 0 ?
-                                "HAM\n" + this.state.tweet + "\n\n Confidence: " + this.state.confidence :
-                                "SPAM\n" + this.state.tweet+ "\n\n Confidence: " + this.state.confidence :
-                            "Tweet Results"}></textarea>
+                        value={this.writeOutput()}></textarea>
                     </div>
                 </form>
             </div>
