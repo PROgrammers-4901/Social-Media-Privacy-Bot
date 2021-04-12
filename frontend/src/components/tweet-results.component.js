@@ -22,8 +22,6 @@ export default class TweetResults extends Component {
                 confidence: this.props.results.confidence
             });
         }
-
-        console.log(this.state);
     }
 
     writeOutput() {
@@ -48,7 +46,7 @@ export default class TweetResults extends Component {
                 case "Account": 
                 case "Hashtag": 
                     results += "This "+ this.state.type +" is " + (this.state.label*100).toFixed(0) +"% spam!\n\n";
-                    results += "Spammiest Tweet:\n" + (this.state.tweet) + "\n\nConfidence: " + this.state.confidence;
+                    results += "Spammiest Tweet:\n" + (this.state.tweet) + "\n\nConfidence: " + (this.state.confidence*100).toFixed(0) + "%";
                     break;
             }
         }

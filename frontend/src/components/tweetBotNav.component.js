@@ -41,9 +41,6 @@ export default class TweetBotNav extends Component {
 
     onSubmit(e) {
         e.preventDefault();
-
-        console.log(this.state);
-
         switch (this.state.function) {
             default:
             case "Tweet": this.searchByURL();
@@ -82,8 +79,13 @@ export default class TweetBotNav extends Component {
     }
 
     searchByAccount() {
+        var account = this.state.input;
+        if(this.state.input[0] == '@')
+            account = this.state.input.slice(1);
+
+
         // send request to Twitter API
-        axios.get('http://localhost:5001/username/' + this.state.input)
+        axios.get('http://localhost:5001/username/' + account)
             .then(res => {
                 
                 this.setState({
@@ -99,9 +101,12 @@ export default class TweetBotNav extends Component {
     }
 
     searchByHashtag() {
+        var hashtag = this.state.input;
+        if(this.state.input[0] == '#')
+            hashtag = this.state.input.slice(1);
 
         // send request to Twitter API
-        axios.get('http://localhost:5001/hashtag/' + this.state.input)
+        axios.get('http://localhost:5001/hashtag/' + hashtag)
             .then(res => {
                 
                 this.setState({
