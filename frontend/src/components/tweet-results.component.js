@@ -1,18 +1,27 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-export default class GetByTweet extends Component {
+export default class TweetResults extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            message = ''
+            tweet : "",
+            label : -1,
+            confidence : 0.0
         }
     }
 
-    // this gets called on start
-    componentDidMount() {
-        // somehow fill this in with the received tweet
+    componentDidUpdate(prevProps) {
+        if(prevProps.results !== this.props.results) {
+            this.setState({
+                tweet: this.props.results.tweet,
+                label: this.props.results.label,
+                confidence: this.props.results.confidence
+            });
+        }
+
+        console.log(this.state);
     }
 
     render() {
@@ -27,7 +36,11 @@ export default class GetByTweet extends Component {
                         name="message" 
                         className="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-3" 
                         readOnly
-                        value={this.state.message}></textarea>
+                        value={this.state.label != -1 ? 
+                            this.state.label == 0 ?
+                                "HAM\n" + this.state.tweet + "\n\n Confidence: " + this.state.confidence :
+                                "SPAM\n" + this.state.tweet+ "\n\n Confidence: " + this.state.confidence :
+                            "Tweet Results"}></textarea>
                     </div>
                 </form>
             </div>

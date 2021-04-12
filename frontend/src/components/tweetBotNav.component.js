@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
+import TweetResults from './tweet-results.component';
+
 export default class TweetBotNav extends Component {
     constructor(props) {
         super(props);
@@ -12,6 +14,11 @@ export default class TweetBotNav extends Component {
         this.state = {
             input: '',
             function: "Tweet",
+            output: {
+                tweet: "",
+                label: "",
+                confidence: ""
+            }            
         }
     }
 
@@ -55,9 +62,14 @@ export default class TweetBotNav extends Component {
         if (tweet_id != null) {
             axios.get('http://localhost:5001/tweet_id/' + tweet_id[1])
                 .then(res => {
-                    console.log(res.data)
 
-                    // redirect somewhere with results
+                    this.setState({
+                        output:{
+                            tweet: res.data.tweet,
+                            label: res.data.prediction,
+                            confidence: res.data.probability
+                        }
+                    });
                 })
                 .catch(err => this.setState({ input: 'Failed to Find Tweet' }));
         }
@@ -72,9 +84,14 @@ export default class TweetBotNav extends Component {
         // send request to Twitter API
         axios.get('http://localhost:5001/username/' + this.state.input)
             .then(res => {
-                console.log(res.data)
                 
-                // redirect somewhere with results
+                this.setState({
+                    output:{
+                        tweet: res.data.tweet,
+                        label: res.data.prediction,
+                        confidence: res.data.probability
+                    }
+                });
             })
             .catch(err => console.log("Cannot reach Twitter API: " + err));
     }
@@ -84,9 +101,14 @@ export default class TweetBotNav extends Component {
         // send request to Twitter API
         axios.get('http://localhost:5001/hashtag/' + this.state.input)
             .then(res => {
-                console.log(res.data)
                 
-                // redirect somewhere with results
+                this.setState({
+                    output:{
+                        tweet: res.data.tweet,
+                        label: res.data.prediction,
+                        confidence: res.data.probability
+                    }
+                });
             })
             .catch(err => console.log("Cannot reach Twitter API: " + err));
     }
@@ -118,6 +140,7 @@ export default class TweetBotNav extends Component {
                      onClick={this.onSubmit}
                      >Search!</button>
                 </div>
+                <TweetResults results = {this.state.output} />
             </nav>
         )
     }
