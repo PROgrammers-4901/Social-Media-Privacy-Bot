@@ -106,12 +106,12 @@ def remove_empty_and_join(tweet_list,tweet_emojis,tweet_links,tweet_text_clean):
     final = [[clean_text,link,emoji,temp[1]] for clean_text,link,emoji,temp in zip(tweet_text_clean,tweet_links,tweet_emojis,tweet_list)]
 
     return final
-def preprocess(tweet_input = ""):
+def preprocess(tweet_input):
+    
     if tweet_input == None:
         print("Error: Empty tweet_input object")
         return 
-    tweet_list = tweet_input
-    
+    tweet_list = tweet_input.copy()
 
     #Cleaning
     #tweet_list object = [[id,label,exists,test],....]. From the google sheet format.

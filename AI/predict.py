@@ -19,6 +19,7 @@ def predict_text(tweet_object):
     naive_model = pickle.load(open(naive_path,'rb'))
     
     tweet_clean = preprocess(tweet_object)
+    print(tweet_object)
 
     tweet_df = pd.DataFrame(tweet_clean,columns=['text'])
     print(tweet_df)
