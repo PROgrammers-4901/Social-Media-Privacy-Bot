@@ -1,3 +1,4 @@
+import copy
 import os
 import regex
 import random
@@ -111,7 +112,8 @@ def preprocess(tweet_input):
     if tweet_input == None:
         print("Error: Empty tweet_input object")
         return 
-    tweet_list = tweet_input.copy()
+
+    tweet_list = copy.deepcopy(tweet_input)
 
     #Cleaning
     #tweet_list object = [[id,label,exists,test],....]. From the google sheet format.
@@ -123,9 +125,7 @@ def preprocess(tweet_input):
     tweet_text_clean = lemmatize_text(tweet_text_clean)
     tweet_text_clean = [" ".join(x) for x in tweet_text_clean]
 
-
     #tweet_final = [[clean_text,link,emoji] for clean_text,link,emoji in zip(tweet_text_clean,tweet_links,tweet_emojis)]
     tweet_final = [[clean_text] for clean_text in tweet_text_clean]
-
     #Return is list of list. Each list element is [text,links,emoji_boolean_check] for inputted data
     return tweet_final
