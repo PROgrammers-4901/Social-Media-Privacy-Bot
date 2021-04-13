@@ -91,5 +91,3 @@ def getHashtag(tag):
     
     
     return tweets
-
-print(getHashtag('pokemon'))
