@@ -34,19 +34,20 @@ export default class TweetResults extends Component {
                 default:
                 case "Tweet": 
                     if(this.state.label == 0)
-                        results += "HAM\n";
+                        results += "This is... HAM!\n";
                     else
-                        results += "SPAM\n";
+                        results += "This is... SPAM!\n";
 
+                    results += "Confidence: " + (this.state.confidence*100).toFixed(0) + "%\n\n";
                     results += this.state.tweet;
 
-                    results += "\n\n Confidence: " + (this.state.confidence*100).toFixed(0) + "%";
+                    
                     break;
 
                 case "Account": 
                 case "Hashtag": 
-                    results += "This "+ this.state.type +" is " + (this.state.label*100).toFixed(0) +"% spam!\n\n";
-                    results += "Spammiest Tweet:\n" + (this.state.tweet) + "\n\nConfidence: " + (this.state.confidence*100).toFixed(0) + "%";
+                    results += "This "+ this.state.type +" is " + (this.state.label*100).toFixed(0) +"% spam!\n";
+                    results += "Confidence: " + (this.state.confidence*100).toFixed(0) + "%\n\nSpammiest Tweet:\n" + (this.state.tweet);
                     break;
             }
         }
