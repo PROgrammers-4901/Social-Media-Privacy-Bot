@@ -17,7 +17,9 @@ def getTweet(tweet_id):
         return
 
     tweet = [j_text['data']['text']]
-    return [tweet]
+    tweet_id = [j_text['data']['id']]
+    
+    return ([tweet], tweet_id)
 
 def getUser(username):
     username = username.strip('@ ')
@@ -37,19 +39,21 @@ def getUser(username):
     params = {
         "max_results": 100
     }
+    tweet_id = []
     x = json.loads(requests.get(f'https://api.twitter.com/2/users/{user_id}/tweets', params=params, headers=headers).text)
     if 'data' not in x:
         return None
     tweets = []
     for item in x['data']:
         tweets.append([item['text']])
-    
-    return tweets
+        tweet_id.append(item['id'])
+    return (tweets, tweet_id)
 
 def getHashtag(tag):
     tag = tag.strip('#@ ')
     BEARER_TOKEN =  os.environ.get('BEARER_TOKEN')
     tweets = []
+    tweet_id = []
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",
     }
@@ -66,6 +70,7 @@ def getHashtag(tag):
         return None
     for item in x['data']:
         tweets.append([item['text']])
+        tweet_id.append(item['id'])
     if 'meta' in x:
         if 'next_token' in x['meta']:
             next_token = x['meta']['next_token']
@@ -81,6 +86,7 @@ def getHashtag(tag):
         x = json.loads(x.text)
         for item in x['data']:
             tweets.append([item['text']])
+            tweet_id.append(item['id'])
         if 'meta' in x:
             if 'next_token' in x['meta']:
                 next_token = x['meta']['next_token']
@@ -90,4 +96,4 @@ def getHashtag(tag):
             truthy = False
     
     
-    return tweets
+    return (tweets, tweet_id)

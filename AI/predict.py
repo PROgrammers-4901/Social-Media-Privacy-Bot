@@ -9,7 +9,7 @@ from sklearn.feature_extraction.text import TfidfVectorizer
 
 #Loads pickle matrices/models and uses the inputted tweet object [[text],[text]..] to be predicted
 #Returns 
-def predict_text(tweet_object):
+def predict_text(tweet_object, tweet_id):
     tfid_path = os.getcwd() + "/pickle_dumps/tfid.pickle"
     svm_path = os.getcwd() + "/pickle_dumps/svm.pickle"
     naive_path = os.getcwd() + "/pickle_dumps/naive.pickle"
@@ -40,7 +40,7 @@ def predict_text(tweet_object):
             sums += int(predictions_NB[item])
             if x < probability[item][1]:
                 x = probability[item][1]
-                temp = tweet_object[item][0]
+                temp = tweet_id[item]
         spam_percentage = sums/len(tweet_object)
 
         response.update({
@@ -52,7 +52,7 @@ def predict_text(tweet_object):
     
     else: #single tweet
         for item in range(0, len(tweet_object)):
-            tweet_text = tweet_object[item][0]
+            tweet_text = tweet_id[item]
             prediction = predictions_SVM[item]
             tweet_probability = probability[item][int(prediction)]
             response.update({
