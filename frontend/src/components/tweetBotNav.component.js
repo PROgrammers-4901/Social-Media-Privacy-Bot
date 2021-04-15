@@ -10,6 +10,7 @@ export default class TweetBotNav extends Component {
         this.onChangeInput = this.onChangeInput.bind(this); // bind 'this' to its respective function
         this.onChangeSearchFunction = this.onChangeSearchFunction.bind(this);
         this.onSubmit = this.onSubmit.bind(this);
+        this.handleKeyDown = this.handleKeyDown.bind(this);
 
         this.state = {
             input: '',
@@ -31,6 +32,20 @@ export default class TweetBotNav extends Component {
         this.setState({
             input: e.target.value
         });
+    }
+
+    handleKeyDown(e) {
+        if(e.key === 'Enter') {
+            switch (this.state.function) {
+                default:
+                case "Tweet": this.searchByURL();
+                    break;
+                case "Account": this.searchByAccount();
+                    break;
+                case "Hashtag": this.searchByHashtag();
+                    break;
+            }
+        }
     }
 
     onChangeSearchFunction(e) {
@@ -123,33 +138,37 @@ export default class TweetBotNav extends Component {
 
     render() {
         return (
-            <nav className="navbar navbar-dark navbar-expand bg-dark navigation-clean">
-                <a className="navbar-brand" href="#"><i>PROgrammers</i></a>
-                <div className="container align-middle">
-                    <input 
-                     type="text"
-                     className="form-control"
-                     placeholder="Search..."
-                     value={this.state.input}
-                     onChange={this.onChangeInput}
-                     onSubmit={this.onSubmit}
-                     />
-                    <select className="custom-select"
-                     onChange={this.onChangeSearchFunction}
-                     value={this.state.function}>
-                        <option value="Tweet">Search by Tweet</option>
-                        <option value="Account">Search by Account</option>
-                        <option value="Hashtag">Search by Hashtag</option>
-                    </select>
-                    <button 
-                     className="btn btn-primary mx-2"
-                     data-bss-hover-animate="pulse"
-                     type="button"
-                     onClick={this.onSubmit}
-                     >Search!</button>
+            <div className="bg-dark">
+                <nav className="navbar navbar-dark navbar-expand bg-dark navigation-clean">
+                    <a className="navbar-brand" href="#"><i>PROgrammers</i></a>
+                    <div className="container align-middle">
+                        <input 
+                        type="text"
+                        className="form-control"
+                        placeholder="Search..."
+                        value={this.state.input}
+                        onChange={this.onChangeInput}
+                        onKeyDown={this.handleKeyDown}
+                        />
+                        <select className="custom-select"
+                        onChange={this.onChangeSearchFunction}
+                        value={this.state.function}>
+                            <option value="Tweet">Search by Tweet</option>
+                            <option value="Account">Search by Account</option>
+                            <option value="Hashtag">Search by Hashtag</option>
+                        </select>
+                        <button 
+                        className="btn btn-primary mx-2"
+                        data-bss-hover-animate="pulse"
+                        type="button"
+                        onClick={this.onSubmit}
+                        >Search!</button>
+                    </div>
+                </nav>
+                <div>
+                    <TweetResults results = {this.state.output} />
                 </div>
-                <TweetResults results = {this.state.output} />
-            </nav>
+            </div>
         )
     }
 }
