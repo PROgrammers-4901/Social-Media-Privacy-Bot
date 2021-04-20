@@ -1,0 +1,72 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly 1`] = `
+<div
+  className="bg-dark"
+>
+  <nav
+    className="navbar navbar-dark navbar-expand bg-dark navigation-clean"
+  >
+    <a
+      className="navbar-brand"
+      href="#"
+    >
+      <i>
+        PROgrammers
+      </i>
+    </a>
+    <div
+      className="container align-middle"
+    >
+      <input
+        className="form-control"
+        onChange={[Function]}
+        onKeyDown={[Function]}
+        placeholder="Search..."
+        type="text"
+        value=""
+      />
+      <select
+        className="custom-select"
+        onChange={[Function]}
+        value="Tweet"
+      >
+        <option
+          value="Tweet"
+        >
+          Search by Tweet
+        </option>
+        <option
+          value="Account"
+        >
+          Search by Account
+        </option>
+        <option
+          value="Hashtag"
+        >
+          Search by Hashtag
+        </option>
+      </select>
+      <button
+        className="btn btn-primary mx-2"
+        data-bss-hover-animate="pulse"
+        onClick={[Function]}
+        type="button"
+      >
+        Search!
+      </button>
+    </div>
+  </nav>
+  <div>
+    <div>
+      <figure
+        className="text-center"
+      >
+        <blockquote
+          className="blockquote"
+        />
+      </figure>
+    </div>
+  </div>
+</div>
+`;

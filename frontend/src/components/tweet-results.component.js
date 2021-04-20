@@ -20,16 +20,13 @@ export default class TweetResults extends Component {
                 tweet: this.props.results.tweet,
                 label: this.props.results.label,
                 confidence: this.props.results.confidence,
-            });
-
-            
+            });            
         }
     }
 
     getOpeningText() {
         if(this.state.label != -1)
         {
-
             switch (this.state.type) {
                 default:
                 case "Tweet": 

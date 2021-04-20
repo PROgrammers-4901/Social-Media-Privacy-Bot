@@ -1,0 +1,25 @@
+// Jest Snapshot v1, https://goo.gl/fbAQLP
+
+exports[`renders correctly given no input 1`] = `
+<div>
+  <figure
+    className="text-center"
+  >
+    <blockquote
+      className="blockquote"
+    />
+  </figure>
+</div>
+`;
+
+exports[`renders correctly given results 1`] = `
+<div>
+  <figure
+    className="text-center"
+  >
+    <blockquote
+      className="blockquote"
+    />
+  </figure>
+</div>
+`;
