@@ -4,7 +4,8 @@ import json
 
 def getTweet(tweet_id):
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
-
+    if tweet_id == "":
+        return
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",
     }
@@ -24,6 +25,8 @@ def getTweet(tweet_id):
 def getUser(username):
     username = username.strip('@ ')
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
+    if username == "":
+        return
 
     headers = {
         'Authorization': f"Bearer {BEARER_TOKEN}",
