@@ -10,6 +10,13 @@ class test_test_Test(unittest.TestCase):
         tweet_id = ['1381942812086796288']
         self.assertEqual("""{"tweet": "1381942812086796288", "prediction": "1", "probability": 0.788406195966992}""", str(predict_text(tweet_text, tweet_id)))
 
+    def test_empty(self):
+        """in this test we are determining that when inputted with no text, error handling is correct"""
+        tweet_text = [[]]
+        tweet_id = ['1381942812086796288']
+        self.assertEqual("""None""", str(predict_text(tweet_text, tweet_id)))
+
+
 
 if __name__ == '__main__':
     unittest.main()
