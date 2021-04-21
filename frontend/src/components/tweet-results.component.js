@@ -1,4 +1,5 @@
 import React, { Component } from 'react';
+
 import { Tweet } from 'react-twitter-widgets';
 
 export default class TweetResults extends Component {
@@ -6,10 +7,10 @@ export default class TweetResults extends Component {
         super(props);
 
         this.state = {
-            type: "Empty",
-            tweet : "",
-            label : -1,
-            confidence : 0.0
+            type: this.props.results.type,
+            tweet: this.props.results.tweet,
+            label: this.props.results.label,
+            confidence: this.props.results.confidence,
         }
     }
 
@@ -42,18 +43,18 @@ export default class TweetResults extends Component {
 
     render() {
 
-        let opening = <p className="my-0 py-0 text-light">This {this.state.type} is...</p>;
+        let opening = <p data-testid="opening" className="my-0 py-0 text-light">This {this.state.type} is...</p>;
         let score;
-        let confidence = <figcaption className="blockquote-footer"> Confidence: {(this.state.confidence*100).toFixed(0) + "%"} </figcaption>
+        let confidence = <figcaption data-testid="confidence" className="blockquote-footer"> Confidence: {(this.state.confidence*100).toFixed(0) + "%"} </figcaption>
 
         switch (this.state.type) {
             case "Tweet": 
-                score = <h2 className={"my-0 py-0 " + (this.state.label == 0 ? "text-success" : "text-danger")}>{(this.state.label == 0 ? " HAM!" : " SPAM!")}</h2>;
+                score = <h2 data-testid="score" className={"my-0 py-0 " + (this.state.label == 0 ? "text-success" : "text-danger")}>{(this.state.label == 0 ? "HAM!" : "SPAM!")}</h2>;
             break;
 
             case "Account": 
             case "Hashtag": 
-                score = <h2 className="my-0 py-0 text-danger"> {(this.state.label*100).toFixed(0) + "% spam!"} </h2>;
+                score = <h2 data-testid="score" className="my-0 py-0 text-danger"> {(this.state.label*100).toFixed(0) + "% spam!"} </h2>;
             break;
 
             default:

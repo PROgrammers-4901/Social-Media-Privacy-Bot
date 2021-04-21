@@ -16,9 +16,10 @@ export default class TweetBotNav extends Component {
             input: '',
             function: "Tweet",
             output: {
-                tweet: "",
-                label: "",
-                confidence: ""
+                type: "Empty",
+                tweet: "1234",
+                label: 0,
+                confidence: 1
             }            
         }
     }
