@@ -1,142 +1,68 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`renders correctly 1`] = `
-<div
-  className="bg-dark"
->
-  <nav
-    className="navbar navbar-dark navbar-expand bg-dark navigation-clean"
+exports[`Navbar Testing renders correctly on start 1`] = `
+<div>
+  <div
+    class="bg-dark"
   >
-    <a
-      className="navbar-brand"
-      href="#"
+    <nav
+      class="navbar navbar-dark navbar-expand bg-dark navigation-clean"
     >
-      <i>
-        PROgrammers
-      </i>
-    </a>
-    <div
-      className="container align-middle"
-    >
-      <input
-        className="form-control"
-        onChange={[Function]}
-        onKeyDown={[Function]}
-        placeholder="Search..."
-        type="text"
-        value=""
-      />
-      <select
-        className="custom-select"
-        onChange={[Function]}
-        value="Tweet"
+      <a
+        class="navbar-brand"
+        href="#"
       >
-        <option
-          value="Tweet"
-        >
-          Search by Tweet
-        </option>
-        <option
-          value="Account"
-        >
-          Search by Account
-        </option>
-        <option
-          value="Hashtag"
-        >
-          Search by Hashtag
-        </option>
-      </select>
-      <button
-        className="btn btn-primary mx-2"
-        data-bss-hover-animate="pulse"
-        onClick={[Function]}
-        type="button"
+        <i>
+          PROgrammers
+        </i>
+      </a>
+      <div
+        class="container align-middle"
       >
-        Search!
-      </button>
-    </div>
-  </nav>
-  <div>
-    <div>
-      <figure
-        className="text-center"
-      >
-        <blockquote
-          className="blockquote"
+        <input
+          class="form-control"
+          placeholder="Search..."
+          type="text"
+          value=""
         />
-      </figure>
-    </div>
-  </div>
-</div>
-`;
-
-exports[`renders correctly on start 1`] = `
-<div
-  className="bg-dark"
->
-  <nav
-    className="navbar navbar-dark navbar-expand bg-dark navigation-clean"
-  >
-    <a
-      className="navbar-brand"
-      href="#"
-    >
-      <i>
-        PROgrammers
-      </i>
-    </a>
-    <div
-      className="container align-middle"
-    >
-      <input
-        className="form-control"
-        onChange={[Function]}
-        onKeyDown={[Function]}
-        placeholder="Search..."
-        type="text"
-        value=""
-      />
-      <select
-        className="custom-select"
-        onChange={[Function]}
-        value="Tweet"
-      >
-        <option
-          value="Tweet"
+        <select
+          class="custom-select"
         >
-          Search by Tweet
-        </option>
-        <option
-          value="Account"
+          <option
+            value="Tweet"
+          >
+            Search by Tweet
+          </option>
+          <option
+            value="Account"
+          >
+            Search by Account
+          </option>
+          <option
+            value="Hashtag"
+          >
+            Search by Hashtag
+          </option>
+        </select>
+        <button
+          class="btn btn-primary mx-2"
+          data-bss-hover-animate="pulse"
+          type="button"
         >
-          Search by Account
-        </option>
-        <option
-          value="Hashtag"
-        >
-          Search by Hashtag
-        </option>
-      </select>
-      <button
-        className="btn btn-primary mx-2"
-        data-bss-hover-animate="pulse"
-        onClick={[Function]}
-        type="button"
-      >
-        Search!
-      </button>
-    </div>
-  </nav>
-  <div>
+          Search!
+        </button>
+      </div>
+    </nav>
     <div>
-      <figure
-        className="text-center"
-      >
-        <blockquote
-          className="blockquote"
-        />
-      </figure>
+      <div>
+        <figure
+          class="text-center"
+        >
+          <blockquote
+            class="blockquote"
+          />
+        </figure>
+      </div>
     </div>
   </div>
 </div>
