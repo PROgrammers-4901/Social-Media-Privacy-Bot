@@ -4,7 +4,9 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "jest"
+    "test": "jest",
+    "build": "webpack --mode production",
+    "deploy": "serve -s build -l 3000"
   },
   "keywords": [],
   "author": "",

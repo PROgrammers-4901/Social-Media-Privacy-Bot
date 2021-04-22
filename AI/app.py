@@ -18,7 +18,7 @@ def tweet_by_id(id):
             'tweet_probability': "" 
         }
     return_value = predict_text(get_tweet_text, get_tweet_id)
-    if return_value = None:
+    if return_value == None:
         return {
             'tweet': "",
             'prediction': -1, 
@@ -37,7 +37,7 @@ def tweet_by_user(username):
             'tweet_probability': "" 
         }
     return_value = predict_text(get_tweet_text, get_tweet_id)
-    if return_value = None:
+    if return_value == None:
         return {
             'tweet': "",
             'prediction': -1, 
@@ -55,7 +55,7 @@ def tweet_by_hashtag(tag):
             'tweet_probability': "" 
         }
     return_value = predict_text(get_tweet_text, get_tweet_id)
-    if return_value = None:
+    if return_value == None:
         return {
             'tweet': "",
             'prediction': -1, 
