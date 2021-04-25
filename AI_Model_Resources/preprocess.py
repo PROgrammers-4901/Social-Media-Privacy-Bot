@@ -12,12 +12,13 @@ from nltk.stem import WordNetLemmatizer
 #Cleaning Data functions
 
 #Returns a URLS list from text and removes them from the list
+# FIXME (?) - what about http URLs?
 def remove_urls(tweet_list):
 
     tweet_links = []
     urls = regex.compile(r'https?://\S+')
     for temp in range(0,len(tweet_list)):
-        tweet_links.append(regex.findall(r'https?://\S+',tweet_list[temp][0]))
+        tweet_links.append(regex.findall(r'https?://\S+',tweet_list[temp][0])) 
 
         tweet_list[temp][0] = (urls.sub(r'',tweet_list[temp][0]))
     
@@ -28,6 +29,7 @@ def remove_emojis(tweet_list):
 
     tweet_emojis = []
 
+    # does this cover all characters we want to remove?
     emojis = regex.compile("["
                            u"\U0001F600-\U0001F64F"  # emoticons
                            u"\U0001F300-\U0001F5FF"  # symbols & pictographs
