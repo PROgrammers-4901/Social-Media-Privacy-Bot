@@ -1,7 +1,7 @@
 import axios from 'axios';
 import React, { Component } from 'react';
 
-export default class ContactForm extends Component {
+export default class InteractiveTweet extends Component {
     constructor(props) {
         super(props);
 
@@ -76,18 +76,19 @@ export default class ContactForm extends Component {
         return (
             <div>
                 <div>
-                    <textarea placeholder="Example Tweet" 
-                    rows="4" 
-                    cols="50" 
-                    id="Interactive-Tweets" 
-                    name="interactiveTweets" 
+                    <textarea
+                    placeholder="Example Tweet" 
+                    rows="8" 
+                    cols="100" 
                     readOnly
                     value={this.state.tweet}></textarea>
                 </div>
-                <div>
-                    <button onClick={this.onSpam}> SPAM </button>
-                    <button onClick={this.onHam}> HAM </button>
-                    <button onClick={this.onNext}> NEXT </button>
+                <div className="btn-group mr-2" role="group">
+                    <button className="btn btn-danger" onClick={this.onSpam}> SPAM </button>
+                    <button className="btn btn-success" onClick={this.onHam}> HAM </button>
+                </div>
+                <div className="btn-group" role="group">
+                    <button className="btn btn-secondary" onClick={this.onNext}> NEXT </button>
                 </div>
             </div>
         )

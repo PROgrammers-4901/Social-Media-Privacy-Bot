@@ -7,6 +7,7 @@ node_modules/
 
 # testing
 /coverage
+/TestResults
 
 # production
 /build
@@ -25,4 +26,4 @@ yarn-error.log*
 # .vscode folder
 /.vscode
 /AI_Model_Resources/models
-/__pycache__
+__pycache__/

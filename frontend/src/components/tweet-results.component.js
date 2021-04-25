@@ -1,35 +1,82 @@
 import React, { Component } from 'react';
-import axios from 'axios';
 
-export default class GetByTweet extends Component {
+import { Tweet } from 'react-twitter-widgets';
+
+export default class TweetResults extends Component {
     constructor(props) {
         super(props);
 
         this.state = {
-            message = ''
+            type: this.props.results.type,
+            tweet: this.props.results.tweet,
+            label: this.props.results.label,
+            confidence: this.props.results.confidence,
         }
     }
 
-    // this gets called on start
-    componentDidMount() {
-        // somehow fill this in with the received tweet
+    componentDidUpdate(prevProps) {
+        if(prevProps.results !== this.props.results) {
+            this.setState({
+                type: this.props.results.type,
+                tweet: this.props.results.tweet,
+                label: this.props.results.label,
+                confidence: this.props.results.confidence,
+            });            
+        }
+    }
+
+    getOpeningText() {
+        if(this.state.label != -1)
+        {
+            switch (this.state.type) {
+                default:
+                case "Tweet": 
+
+                break;
+
+                case "Account": 
+                case "Hashtag": 
+                break;
+            }
+        }
     }
 
     render() {
+
+        let opening = <p data-testid="opening" className="my-0 py-0 text-light">This {this.state.type} is...</p>;
+        let score;
+        let confidence = <figcaption data-testid="confidence" className="blockquote-footer"> Confidence: {(this.state.confidence*100).toFixed(0) + "%"} </figcaption>
+
+        switch (this.state.type) {
+            case "Tweet": 
+                score = <h2 data-testid="score" className={"my-0 py-0 " + (this.state.label == 0 ? "text-success" : "text-danger")}>{(this.state.label == 0 ? "HAM!" : "SPAM!")}</h2>;
+            break;
+
+            case "Account": 
+            case "Hashtag": 
+                score = <h2 data-testid="score" className="my-0 py-0 text-danger"> {(this.state.label*100).toFixed(0) + "% spam!"} </h2>;
+            break;
+
+            default:
+            break;
+        }
+
         return (
             <div>
-                <form>
-                    <div>
-                        <textarea placeholder="Tweet Results" 
-                        rows="4" 
-                        cols="50" 
-                        id="ReceivedTweet" 
-                        name="message" 
-                        className="u-border-2 u-border-black u-border-no-left u-border-no-right u-border-no-top u-input u-input-rectangle u-input-3" 
-                        readOnly
-                        value={this.state.message}></textarea>
-                    </div>
-                </form>
+                <figure className="text-center">
+                    <blockquote className="blockquote">
+                        {this.state.type !== "Empty" ? opening : null}
+
+                        {this.state.type !== "Empty" ? score : null}                        
+                    </blockquote>
+                    {this.state.type !== "Empty" ? 
+                    <Tweet
+                        tweetId={this.state.tweet}
+                        renderError={(_err) => null}
+                        options={{ align: "center", theme: "dark"}}
+                    /> : null}
+                    {this.state.type !== "Empty" ? confidence : null}
+                </figure>
             </div>
         )
     }

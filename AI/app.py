@@ -1,4 +1,5 @@
 import json
+from predict import *
 from flask import Flask
 from flask_cors import CORS
 from get_tweet import getTweet, getUser, getHashtag
@@ -8,18 +9,56 @@ CORS(app)
 
 @app.route('/tweet_id/<id>', methods=['GET'])
 def tweet_by_id(id):
-    return getTweet(id).text
+    get_tweet_text, get_tweet_id = getTweet(id)
+    
+    if get_tweet_text == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return_value = predict_text(get_tweet_text, get_tweet_id)
+    if return_value == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return return_value
 
 @app.route('/username/<username>', methods=['GET'])
 def tweet_by_user(username):
-    return getUser(username).text
+    get_tweet_text, get_tweet_id = getUser(username)
+
+    if get_tweet_text == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return_value = predict_text(get_tweet_text, get_tweet_id)
+    if return_value == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return return_value
 
 @app.route('/hashtag/<tag>', methods=['GET'])
 def tweet_by_hashtag(tag):
-    return json.dumps(getHashtag(tag),indent=4)
-
-# The function to convert returns from above to list of lists format
-	# STEPS
-		# the list of lists looks like list[[item2, item2]] (i.e., exactly 2 items within each item)
-		# parse the text for list of list components, appending a list[i][1] and list[i][2] for each
-		# return the list of lists for processing
+    get_tweet_text, get_tweet_id = getHashtag(tag)
+    if get_tweet_text == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return_value = predict_text(get_tweet_text, get_tweet_id)
+    if return_value == None:
+        return {
+            'tweet': "",
+            'prediction': -1, 
+            'tweet_probability': "" 
+        }
+    return return_value
