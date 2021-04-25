@@ -7,6 +7,7 @@ from get_tweet import getTweet, getUser, getHashtag
 app = Flask(__name__)
 CORS(app)
 
+# tweet id - does it need changes to output?
 @app.route('/tweet_id/<id>', methods=['GET'])
 def tweet_by_id(id):
     get_tweet_text, get_tweet_id = getTweet(id)
@@ -26,6 +27,7 @@ def tweet_by_id(id):
         }
     return return_value
 
+# username - does it need changes to output?
 @app.route('/username/<username>', methods=['GET'])
 def tweet_by_user(username):
     get_tweet_text, get_tweet_id = getUser(username)
@@ -45,6 +47,7 @@ def tweet_by_user(username):
         }
     return return_value
 
+# hashtag - does it need changes to output?
 @app.route('/hashtag/<tag>', methods=['GET'])
 def tweet_by_hashtag(tag):
     get_tweet_text, get_tweet_id = getHashtag(tag)

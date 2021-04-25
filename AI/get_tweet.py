@@ -2,6 +2,8 @@ import requests
 import os
 import json
 
+# do get functions need further text processing for app.py?
+
 def getTweet(tweet_id):
     BEARER_TOKEN = os.environ.get('BEARER_TOKEN')
     if tweet_id == "":
